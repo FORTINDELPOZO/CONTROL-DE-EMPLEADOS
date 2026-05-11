@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - Carga de Datos</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #e9ecef; padding: 20px; }
+        .form-container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        button { margin-top: 25px; width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Registro de Prestador</h2>
+    <form id="formRegistro">
+        <label>DNI (Sin puntos)</label>
+        <input type="text" id="dni" required>
+        
+        <label>Nombre Completo</label>
+        <input type="text" id="nombre" required>
+
+        <div class="grid">
+            <div>
+                <label>Emisión Antecedentes</label>
+                <input type="date" id="ant">
+            </div>
+            <div>
+                <label>Emisión Domicilio</label>
+                <input type="date" id="dom">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <label>Firma Autorización</label>
+                <input type="date" id="aut">
+            </div>
+            <div>
+                <label>Vto. Registro Conducir</label>
+                <input type="date" id="vto_cond">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <label>Patente Vehículo</label>
+                <input type="text" id="patente">
+            </div>
+            <div>
+                <label>Vto. Seguro</label>
+                <input type="date" id="vto_seg">
+            </div>
+        </div>
+
+        <button type="button" onclick="guardar()">Guardar en Base de Datos</button>
+    </form>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDJTTUnYHWzlM6ua7McvP8QA2zfV3NCc1EjpV820IP";
+
+    async function guardar() {
+        const btn = document.querySelector('button');
+        btn.disabled = true;
+        btn.innerHTML = "Guardando...";
+
+        const payload = {
+            dni: document.getElementById('dni').value,
+            nombre: document.getElementById('nombre').value,
+            ant: document.getElementById('ant').value,
+            dom: document.getElementById('dom').value,
+            aut: document.getElementById('aut').value,
+            vto_cond: document.getElementById('vto_cond').value,
+            patente: document.getElementById('patente').value,
+            vto_seg: document.getElementById('vto_seg').value
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necesario para Google Scripts
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            alert("✅ Datos guardados correctamente");
+            document.getElementById('formRegistro').reset();
+        } catch (e) {
+            alert("Error al guardar");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "Guardar en Base de Datos";
+        }
+    }
+</script>
+</body>
+</html>
