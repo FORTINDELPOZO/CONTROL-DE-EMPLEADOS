@@ -31,6 +31,10 @@
       <p><label><input type="checkbox" id="p_ant" /><span>Antecedentes Penales</span></label></p>
       <div class="input-field"><input type="date" id="ant"><label class="active">Fecha de Emisión</label></div>
 
+      <!-- Agregué estos dos campos que faltaban para que coincidan con tu doPost -->
+      <p><label><input type="checkbox" id="p_dom" /><span>DNI / Domicilio</span></label></p>
+      <div class="input-field"><input type="date" id="dom"><label class="active">Fecha Documento</label></div>
+
       <div class="section-title">Vehículo y Conducción</div>
       <div class="input-field"><input id="patente" type="text"><label>Patente / Dominio</label></div>
       
@@ -51,6 +55,7 @@
       btn.disabled = true;
       btn.innerText = "Procesando...";
 
+      // Mapeo exacto de lo que tu función doPost(e) espera (JSON.parse)
       const datos = {
         dni: document.getElementById('dni').value,
         nombre: document.getElementById('nombre').value,
@@ -60,13 +65,23 @@
         aut: document.getElementById('aut').value,
         presento_ant: document.getElementById('p_ant').checked ? "SI" : "NO",
         ant: document.getElementById('ant').value,
+        presento_dom: document.getElementById('p_dom').checked ? "SI" : "NO", // Faltaba
+        dom: document.getElementById('dom').value, // Faltaba
+        presento_con: document.getElementById('p_con').checked ? "SI" : "NO",
         vto_cond: document.getElementById('vto_cond').value,
         patente: document.getElementById('patente').value,
+        presento_seg: document.getElementById('p_seg').checked ? "SI" : "NO",
         vto_seg: document.getElementById('vto_seg').value
       };
 
-      fetch(window.location.href, {
+      // Cambiamos window.location.href por la URL real de tu script
+      const url = "https://script.google.com/macros/s/AKfycbwc4kPYiXY_68QkhNu6-ss6AJ2gsk7aQ5AQKGOm5RwLrQkgpwMuTf3XoWQLfqsSbSD4/exec";
+
+      fetch(url, {
         method: 'POST',
+        mode: 'no-cors', // Fundamental para evitar errores de seguridad de Google
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos)
       })
       .then(() => {
@@ -76,8 +91,9 @@
         btn.innerText = "Guardar en Base de Datos";
       })
       .catch(err => {
-        alert("❌ Error de conexión");
+        alert("❌ Error al guardar: " + err);
         btn.disabled = false;
+        btn.innerText = "Guardar en Base de Datos";
       });
     }
   </script>
