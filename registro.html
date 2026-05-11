@@ -1,167 +1,85 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carga de Prestadores - Barrio Cerrado</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
-        .form-container { max-width: 650px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { color: #1a73e8; border-bottom: 3px solid #1a73e8; padding-bottom: 10px; margin-bottom: 25px; }
-        .campo-grupo { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #ddd; transition: 0.3s; }
-        .campo-grupo.activo { border-left-color: #28a745; background: #f0fff4; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .fecha-input { margin-top: 10px; display: none; } 
-        button { width: 100%; padding: 15px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
-        button:hover { background: #1557b0; }
-        .row { display: flex; gap: 15px; margin-bottom: 15px; }
-        .row > div { flex: 1; }
-    </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body { padding: 20px; background-color: #f5f5f5; font-family: sans-serif; }
+    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px !important; }
+    h5 { color: #1565c0; font-weight: bold; margin-bottom: 30px; text-align: center; }
+    .btn-submit { width: 100%; margin-top: 20px; background-color: #1565c0 !important; }
+    .section-title { font-size: 0.9rem; color: #777; margin-top: 20px; border-bottom: 1px solid #eee; }
+  </style>
 </head>
 <body>
-
-<div class="form-container">
-    <h2>Registro de Personal</h2>
+  <div class="container">
+    <h5>Registro de Prestadores</h5>
     <form id="formRegistro">
-        <div class="row">
-            <div>
-                <label>DNI (Sin puntos)</label>
-                <input type="text" id="dni" placeholder="Ej: 35123456" required>
-            </div>
-            <div>
-                <label>Nombre Completo</label>
-                <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
-            </div>
-        </div>
+      <div class="row">
+        <div class="input-field col s12"><input id="dni" type="text" required><label>DNI (Sin puntos)</label></div>
+        <div class="input-field col s12"><input id="nombre" type="text" required><label>Nombre Completo del Prestador</label></div>
+      </div>
+      
+      <div class="row">
+        <div class="input-field col s6"><input id="propietario" type="text" required><label>Propietario / Autoriza</label></div>
+        <div class="input-field col s6"><input id="ubicacion" type="text" required><label>Lote / Unidad</label></div>
+      </div>
 
-        <div class="campo-grupo" id="grupo_ant">
-            <label>¿Presentó Antecedentes Penales?</label>
-            <select onchange="toggleFecha('ant', this.value)">
-                <option value="NO">NO</option>
-                <option value="SI">SÍ</option>
-            </select>
-            <div id="div_ant" class="fecha-input">
-                <label>Fecha de Emisión de Antecedentes:</label>
-                <input type="date" id="ant">
-            </div>
-        </div>
+      <div class="section-title">Documentación Anual</div>
+      <p><label><input type="checkbox" id="p_aut" /><span>Autorización Firmada</span></label></p>
+      <div class="input-field"><input type="date" id="aut"><label class="active">Fecha de Emisión</label></div>
 
-        <div class="campo-grupo" id="grupo_dom">
-            <label>¿Presentó Certificado de Domicilio?</label>
-            <select onchange="toggleFecha('dom', this.value)">
-                <option value="NO">NO</option>
-                <option value="SI">SÍ</option>
-            </select>
-            <div id="div_dom" class="fecha-input">
-                <label>Fecha de Emisión de Domicilio:</label>
-                <input type="date" id="dom">
-            </div>
-        </div>
+      <p><label><input type="checkbox" id="p_ant" /><span>Antecedentes Penales</span></label></p>
+      <div class="input-field"><input type="date" id="ant"><label class="active">Fecha de Emisión</label></div>
 
-        <div class="campo-grupo" id="grupo_aut">
-            <label>¿Tiene Autorización del Propietario?</label>
-            <select onchange="toggleFecha('aut', this.value)">
-                <option value="NO">NO</option>
-                <option value="SI">SÍ</option>
-            </select>
-            <div id="div_aut" class="fecha-input">
-                <label>Fecha de Firma de Autorización:</label>
-                <input type="date" id="aut">
-            </div>
-        </div>
+      <div class="section-title">Vehículo y Conducción</div>
+      <div class="input-field"><input id="patente" type="text"><label>Patente / Dominio</label></div>
+      
+      <p><label><input type="checkbox" id="p_con" /><span>Carnet de Conducir</span></label></p>
+      <div class="input-field"><input type="date" id="vto_cond"><label class="active">Fecha Vencimiento Carnet</label></div>
 
-        <div class="campo-grupo" id="grupo_vto_cond">
-            <label>¿Tiene Registro de Conducir?</label>
-            <select onchange="toggleFecha('vto_cond', this.value)">
-                <option value="NO">NO</option>
-                <option value="SI">SÍ</option>
-            </select>
-            <div id="div_vto_cond" class="fecha-input">
-                <label>Vencimiento del Carnet:</label>
-                <input type="date" id="vto_cond">
-            </div>
-        </div>
+      <p><label><input type="checkbox" id="p_seg" /><span>Seguro Vigente</span></label></p>
+      <div class="input-field"><input type="date" id="vto_seg"><label class="active">Fecha Vencimiento Seguro</label></div>
 
-        <div class="row">
-            <div>
-                <label>Patente Vehículo</label>
-                <input type="text" id="patente" placeholder="Ej: AA123BB">
-            </div>
-        </div>
-
-        <div class="campo-grupo" id="grupo_vto_seg">
-            <label>¿Tiene Seguro Vigente?</label>
-            <select onchange="toggleFecha('vto_seg', this.value)">
-                <option value="NO">NO</option>
-                <option value="SI">SÍ</option>
-            </select>
-            <div id="div_vto_seg" class="fecha-input">
-                <label>Vencimiento de Póliza:</label>
-                <input type="date" id="vto_seg">
-            </div>
-        </div>
-
-        <button type="button" onclick="guardar()">Guardar en Base de Datos</button>
+      <button type="button" class="btn btn-submit" onclick="enviar()">Guardar en Base de Datos</button>
     </form>
-</div>
+  </div>
 
-<script>
-    // URL Actualizada con tu nueva implementación
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC7n_aglLtCjXIOQuJZRPmFskXQb8_c_YDueBoswov47xDp6q445hPV_owoFSo39q5/exec";
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    function enviar() {
+      const btn = document.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.innerText = "Procesando...";
 
-    function toggleFecha(id, valor) {
-        const div = document.getElementById('div_' + id);
-        const grupo = document.getElementById('grupo_' + id);
-        if (valor === "SI") {
-            div.style.display = "block";
-            grupo.classList.add('activo');
-        } else {
-            div.style.display = "none";
-            document.getElementById(id).value = ""; 
-            grupo.classList.remove('activo');
-        }
+      const datos = {
+        dni: document.getElementById('dni').value,
+        nombre: document.getElementById('nombre').value,
+        propietario: document.getElementById('propietario').value,
+        ubicacion: document.getElementById('ubicacion').value,
+        presento_aut: document.getElementById('p_aut').checked ? "SI" : "NO",
+        aut: document.getElementById('aut').value,
+        presento_ant: document.getElementById('p_ant').checked ? "SI" : "NO",
+        ant: document.getElementById('ant').value,
+        vto_cond: document.getElementById('vto_cond').value,
+        patente: document.getElementById('patente').value,
+        vto_seg: document.getElementById('vto_seg').value
+      };
+
+      fetch(window.location.href, {
+        method: 'POST',
+        body: JSON.stringify(datos)
+      })
+      .then(() => {
+        alert("✅ Registro guardado con éxito.");
+        document.getElementById('formRegistro').reset();
+        btn.disabled = false;
+        btn.innerText = "Guardar en Base de Datos";
+      })
+      .catch(err => {
+        alert("❌ Error de conexión");
+        btn.disabled = false;
+      });
     }
-
-    async function guardar() {
-        const dni = document.getElementById('dni').value;
-        const nombre = document.getElementById('nombre').value;
-
-        if (!dni || !nombre) {
-            alert("Por favor, completa DNI y Nombre.");
-            return;
-        }
-
-        const btn = document.querySelector('button');
-        btn.disabled = true;
-        btn.innerHTML = "Guardando...";
-
-        const payload = {
-            dni: dni,
-            nombre: nombre,
-            ant: document.getElementById('ant').value,
-            dom: document.getElementById('dom').value,
-            aut: document.getElementById('aut').value,
-            vto_cond: document.getElementById('vto_cond').value,
-            patente: document.getElementById('patente').value,
-            vto_seg: document.getElementById('vto_seg').value
-        };
-
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            alert("✅ ¡Datos guardados con éxito!");
-            location.reload(); 
-        } catch (e) {
-            alert("❌ Error de conexión. Revisa la consola.");
-            btn.disabled = false;
-            btn.innerHTML = "Guardar en Base de Datos";
-        }
-    }
-</script>
+  </script>
 </body>
 </html>
